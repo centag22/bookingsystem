@@ -5,12 +5,15 @@ phases:
     runtime-versions:
       java: corretto17  # Specify Corretto 17 as the Java version
     commands:
-      - echo "Installing JDK 17"
-      - export JAVA_HOME=/usr/lib/jvm/java-17-amazon-corretto
+      - echo "Setting JAVA_HOME"
+      - export JAVA_HOME=$(dirname $(dirname $(readlink -f $(which java))))
       - export PATH=$JAVA_HOME/bin:$PATH
+      - echo "JAVA_HOME is set to $JAVA_HOME"
   pre_build:
     commands:
       - echo "Preparing build"
+      - java -version  # Print Java version for verification
+      - echo $JAVA_HOME  # Print JAVA_HOME for verification
       - mvn clean
   build:
     commands:
