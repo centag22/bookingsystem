@@ -3,25 +3,23 @@ version: 0.2
 phases:
   install:
     runtime-versions:
-      java: corretto11  # Use Amazon Corretto 11 as the JDK
+      java: corretto17
     commands:
-      - echo Installing Maven
+      - echo "Installing Maven"
       - yum install -y maven
   pre_build:
     commands:
-      - echo Logging in to Amazon ECR...
-      - $(aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com)
-      - echo Build started on date
+      - echo "Caching Maven dependencies"
+      - mvn dependency:go-offline
   build:
     commands:
-      - echo Building the Maven project...
-      - mvn clean install
+      - echo "Building the project"
+      - mvn package
   post_build:
     commands:
-      - echo Build completed on date
-      - echo Build artifacts location
+      - echo "Running tests"
+      - mvn test
 artifacts:
   files:
     - target/*.jar
   discard-paths: yes
-  base-directory: target
