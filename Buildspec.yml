@@ -1,44 +1,27 @@
-name: Java CI
+version: 0.2
 
-on:
-  push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
-
-jobs:
+phases:
+  install:
+    runtime-versions:
+      java: corretto11  # Use Amazon Corretto 11 as the JDK
+    commands:
+      - echo Installing Maven
+      - yum install -y maven
+  pre_build:
+    commands:
+      - echo Logging in to Amazon ECR...
+      - $(aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com)
+      - echo Build started on date
   build:
-
-    runs-on: ubuntu-latest
-
-    steps:
-    - name: Checkout repository
-      uses: actions/checkout@v2
-
-    - name: Set up JDK 17
-      uses: actions/setup-java@v3
-      with:
-        java-version: '17'
-        distribution: 'adopt'
-
-    - name: Cache Maven packages
-      uses: actions/cache@v2
-      with:
-        path: ~/.m2/repository
-        key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
-        restore-keys: ${{ runner.os }}-maven
-
-    - name: Build with Maven
-      run: mvn -B package --file pom.xml
-
-    - name: Run tests
-      run: mvn test
-
-    - name: Package application
-      run: mvn package
-
-    - name: Archive JAR file
-      uses: actions/upload-artifact@v2
-      with:
-        name: flight-booking-system
-        path: target/*.jar
+    commands:
+      - echo Building the Maven project...
+      - mvn clean install
+  post_build:
+    commands:
+      - echo Build completed on date
+      - echo Build artifacts location
+artifacts:
+  files:
+    - target/*.jar
+  discard-paths: yes
+  base-directory: target
