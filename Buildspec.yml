@@ -3,20 +3,23 @@ version: 0.2
 phases:
   install:
     runtime-versions:
-      java: corretto11  # Specify the Java runtime version if needed
+      java: corretto11  # Adjust Java version as needed
+    commands:
+      - echo "Installing dependencies"
+      - mvn install -DskipTests  # Install dependencies but skip tests initially
   build:
     commands:
       - echo "Building the project"
-      - mvn package
+      - mvn package  # Build the project
   post_build:
     commands:
       - echo "Running tests"
-      - mvn test
+      - mvn test  # Run the tests
 
 artifacts:
   files:
-    - target/*.jar  # Adjust according to your project's output artifacts
+    - target/*.jar  # Adjust according to your output files
 
 cache:
   paths:
-    - /root/.m2/**/*  # Cache Maven dependencies to speed up subsequent builds
+    - /root/.m2/**/*  # Cache Maven dependencies
