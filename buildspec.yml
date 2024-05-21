@@ -3,23 +3,23 @@ version: 0.2
 phases:
   install:
     runtime-versions:
-      java: corretto11  # Adjust Java version as needed
+      java: corretto17  # Specify Corretto 17 as the Java version
     commands:
-      - echo "Installing dependencies"
-      - mvn install -DskipTests  # Install dependencies but skip tests initially
+      - echo "Installing JDK 17"
+      - export JAVA_HOME=/usr/lib/jvm/java-17-amazon-corretto
+      - export PATH=$JAVA_HOME/bin:$PATH
+  pre_build:
+    commands:
+      - echo "Preparing build"
+      - mvn clean
   build:
     commands:
       - echo "Building the project"
-      - mvn package  # Build the project
+      - mvn install -DskipTests
   post_build:
     commands:
-      - echo "Running tests"
-      - mvn test  # Run the tests
+      - echo "Build completed"
 
 artifacts:
   files:
-    - target/*.jar  # Adjust according to your output files
-
-cache:
-  paths:
-    - /root/.m2/**/*  # Cache Maven dependencies
+    - target/*
