@@ -3,14 +3,7 @@ version: 0.2
 phases:
   install:
     runtime-versions:
-      java: corretto17
-    commands:
-      - echo "Installing Maven"
-      - yum install -y maven
-  pre_build:
-    commands:
-      - echo "Caching Maven dependencies"
-      - mvn dependency:go-offline
+      java: corretto11  # Specify the Java runtime version if needed
   build:
     commands:
       - echo "Building the project"
@@ -19,7 +12,11 @@ phases:
     commands:
       - echo "Running tests"
       - mvn test
+
 artifacts:
   files:
-    - target/*.jar
-  discard-paths: yes
+    - target/*.jar  # Adjust according to your project's output artifacts
+
+cache:
+  paths:
+    - /root/.m2/**/*  # Cache Maven dependencies to speed up subsequent builds
