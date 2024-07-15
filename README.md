@@ -1,1 +1,1 @@
-Just a heads up that I'm in the process of setting up a CI/CD pipeline on Elastic Beanstalk for this project. This will help streamline the development process and ensure smoother deployments. If you have any questions or suggestions, feel free to reach out!
+Just a heads up that I'm in the process of setting up a CI/CD pipeline on Elastic Beanstalk for this project. This will help streamline the development process and ensure smoother deployments. If you have any questions or suggestions, feel free to reach out Centag22!
